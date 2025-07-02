@@ -1,0 +1,12 @@
+---
+title: 'Fremside'
+author: 'Rapporteket'
+date: '`r format(Sys.time(), "%d. %B %Y")`'
+output: 
+  html_document: 
+    keep_md: yes
+---
+
+
+# Velkommen til Traumeregisteret
+Du er nå inne på Rapporteket for Traumeregisteret. Rapporteket er registerets resultattjeneste. Disse sidene inneholder en samling av figurer og tabeller som viser resultater fra registeret. På hver av sidene kan man gjøre utvalg i menyene til venstre. Alle resultater er basert på ferdigstilte registreringer. Merk at data er hentet direkte fra registerets database. Dette medfører at data ikke er kvalitetssikret enda. For mer utdypende informasjon og data som er kvalitetssikret se [årsrapporten](https://www.kvalitetsregistre.no/4a48a6/siteassets/dokumenter/arsrapporter/traumeregisteret/arsrapport-2023-nasjonalt-traumeregister.pdf) til registeret.
