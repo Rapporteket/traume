@@ -9,19 +9,19 @@
 
 #---- Registrering figur ----
 
-plot_registrering <- function(input,total) {
+plot_registrering <- function(input, total, userUnitId) {
   if (input$time_period == "ar") {
     trauma_filtered <- total %>%
-      filter(year >= year(Sys.Date()) - 5,
-             HealthUnitShortName == "Kristiansand") %>%
-      group_by(year) %>%
-      summarise(total_traumas = n())
+      dplyr::filter(year >= year(Sys.Date()) - 5,
+                    UnitId == {{userUnitId}}) %>%
+      dplyr::group_by(year) %>%
+      dplyr::summarise(total_traumas = n())
 
 
   } else {
     trauma_filtered <- total %>%
       filter(month >= floor_date(Sys.Date() - months(12), "month"),
-             HealthUnitShortName == "Kristiansand") %>%
+             UnitId == {{userUnitId}}) %>%
       group_by(month) %>%
       summarise(total_traumas = n())
   }
@@ -31,7 +31,7 @@ plot_registrering <- function(input,total) {
 
 #---- Registrering tabell ----
 
-table_registrering <- function(input,total) {
+table_registrering <- function(input, total) {
   if (input$time_period == "ar") {
     trauma_filtered <- total %>%
       filter(year >= year(Sys.Date()) - 5,

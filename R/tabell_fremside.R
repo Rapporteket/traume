@@ -6,10 +6,10 @@
 #' @return
 #' @export
 
-tabell_fremside <- function(total) {
+tabell_fremside <- function(total, userUnitId) {
   antall_month <- total %>%
     filter(
-      HealthUnitShortName %in% c("Kristiansand"),
+      UnitId %in% c({{userUnitId}}),
       month >= floor_date(Sys.Date() - months(9), "month"),
       acc_overflyttet == 2,
       !is.na(month)
@@ -45,8 +45,8 @@ tabell_fremside <- function(total) {
 
   antall_total <- total %>%
     filter(
-      HealthUnitShortName %in% c("Kristiansand"),
-      month >= floor_date(Sys.Date() - years(2), "year"),
+      UnitId %in% c({{userUnitId}}),
+      year >= floor_date(Sys.Date() - years(2), "year"),
       !is.na(year)
     ) %>%  # Remove rows where time_period is NA
     group_by(year) %>%
@@ -80,9 +80,9 @@ tabell_fremside <- function(total) {
       antall_month,.
     ) %>% pivot_longer(
       cols = -month, names_to = "Kategori", values_to = "value"
-      ) %>% pivot_wider(
+    ) %>% pivot_wider(
       names_from = month, values_from = value
-      )
+    )
 
   antall_total <- antall_total %>%
     mutate(Kategori = case_when(
@@ -104,10 +104,12 @@ tabell_fremside <- function(total) {
       Kategori == "overflyttet_traumesenter" ~ "Overflyttet til traumesenter",
       Kategori == "overflyttet_andre_sykehus" ~ "Overflyttet til andre sykehus",
       Kategori == "utskrevet_rehab" ~ "Utskrevet til rehabelitering",
-           ))
+    ))
 
 
 
 
   return(antall_total)
+
 }
+
