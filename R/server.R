@@ -46,7 +46,7 @@ app_server <- function(input, output, session) {
   years_reactive <- reactive({
     years <- total %>%
       dplyr::filter(UnitId == user$org()) %>%
-      dplyr::mutate(year = year(FormDate)) %>%  # Extract year from date
+      dplyr::mutate(year = lubridate::year(FormDate)) %>%  # Extract year from date
       dplyr::pull(year) %>%
       unique() %>%
       sort(decreasing = TRUE)
@@ -94,16 +94,16 @@ app_server <- function(input, output, session) {
 
     # få tak i navn til tittel
     navn <- get_HealthUnitShortName(user$org(), map_db_resh)
-    ggplot(plot_registrering(input,total, userUnitId = user$org()),
-           aes(x = !!sym(ifelse(input$time_period == "ar", "year", "month")), y = total_traumas)) +
-      geom_col(fill = "#6baed6") +
-      labs(
+    ggplot2::ggplot(plot_registrering(input,total, userUnitId = user$org()),
+           ggplot2::aes(x = !!rlang::sym(ifelse(input$time_period == "ar", "year", "month")), y = total_traumas)) +
+      ggplot2::geom_col(fill = "#6baed6") +
+      ggplot2::labs(
         x = ifelse(input$time_period == "ar", "År", "Måned"),
         y = "Antall Traumer",
         title = paste("Antall traumer per", ifelse(input$time_period == "ar", "år", "måned"), "for", navn),
         subtitle = ifelse(input$time_period == "ar", "Siste 5 år", "Siste 12 måneder")
       ) +
-      theme_minimal()
+      ggplot2::theme_minimal()
   })
 
   output$trauma_table <- DT::renderDataTable({

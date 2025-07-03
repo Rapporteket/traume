@@ -2,21 +2,21 @@
 #'
 #'
 #'
-#'
-#' @return
+#' @title Tabell til fremside
+#' @return fremsidetabell
 #' @export
 
 tabell_fremside <- function(total, userUnitId) {
   antall_month <- total %>%
-    filter(
+    dplyr::filter(
       UnitId %in% c({{userUnitId}}),
-      month >= floor_date(Sys.Date() - months(9), "month"),
+      month >= lubridate::floor_date(Sys.Date() - months(9), "month"),
       acc_overflyttet == 2,
       !is.na(month)
     ) %>%
-    group_by(month) %>%
-    summarise(
-      registrert = sum(n(), na.rm = TRUE),
+    dplyr::group_by(month) %>%
+    dplyr::summarise(
+      registrert = sum(dplyr::n(), na.rm = TRUE),
       traumeteam = sum(ed_tta == 1, na.rm = TRUE),
       undertriage = sum(inj_iss >= 15, ed_tta == 2, na.rm = TRUE),
       utskrevet_dod = sum(hosp_dischg_dest == 3, na.rm = TRUE),
@@ -34,24 +34,22 @@ tabell_fremside <- function(total, userUnitId) {
       overflyttet_traumesenter = sum(hosp_dischg_dest == 4, na.rm = TRUE),
       overflyttet_andre_sykehus = sum(hosp_dischg_dest %in% c(5,6,8), na.rm = TRUE),
       utskrevet_rehab = sum(hosp_dischg_dest %in% c(2,7), na.rm = TRUE),
-      .groups = 'drop'
-    ) %>% arrange(
-      desc(month)
-    ) %>%
-    mutate(
+      .groups = 'drop') %>%
+    dplyr::arrange(desc(month)) %>%
+    dplyr::mutate(
       month = format(month, "%Y-%m"),
       month = as.character(month)
     )
 
   antall_total <- total %>%
-    filter(
+    dplyr::filter(
       UnitId %in% c({{userUnitId}}),
-      year >= floor_date(Sys.Date() - years(2), "year"),
+      year >= lubridate::floor_date(Sys.Date() - lubridate::years(2), "year"),
       !is.na(year)
     ) %>%  # Remove rows where time_period is NA
-    group_by(year) %>%
-    summarise(
-      registrert = sum(n(), na.rm = TRUE),
+    dplyr::group_by(year) %>%
+    dplyr::summarise(
+      registrert = sum(dplyr::n(), na.rm = TRUE),
       traumeteam = sum(ed_tta == 1, na.rm = TRUE),
       undertriage = sum(inj_iss >= 15, ed_tta == 2, na.rm = TRUE),
       utskrevet_dod = sum(hosp_dischg_dest == 3, na.rm = TRUE),
@@ -70,22 +68,16 @@ tabell_fremside <- function(total, userUnitId) {
       overflyttet_andre_sykehus = sum(hosp_dischg_dest %in% c(5,6,8), na.rm = TRUE),
       utskrevet_rehab = sum(hosp_dischg_dest %in% c(2,7), na.rm = TRUE),
       .groups = 'drop'
-    ) %>% arrange(
-      -year
-    ) %>% mutate(
-      month = as.character(year)
-    ) %>% select(
-      -year
-    ) %>% bind_rows(
-      antall_month,.
-    ) %>% pivot_longer(
-      cols = -month, names_to = "Kategori", values_to = "value"
-    ) %>% pivot_wider(
-      names_from = month, values_from = value
-    )
+    ) %>%
+    dplyr::arrange(-year) %>%
+    dplyr::mutate(month = as.character(year)) %>%
+    dplyr::select(-year) %>%
+    dplyr::bind_rows(antall_month,.) %>%
+    tidyr::pivot_longer(cols = -month, names_to = "Kategori", values_to = "value") %>%
+    tidyr::pivot_wider(names_from = month, values_from = value)
 
   antall_total <- antall_total %>%
-    mutate(Kategori = case_when(
+    dplyr::mutate(Kategori = dplyr::case_when(
       Kategori == "registrert" ~ "Registrert i registeret",
       Kategori == "traumeteam" ~ "Motatt med traumeteam",
       Kategori == "undertriage" ~ "Undertriagerte",

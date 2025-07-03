@@ -14,14 +14,14 @@ Description: Applikasjon for traumeregisteret
 Depends:
   R (>= 3.5.0)
 Imports:
-  DT,
-  magrittr,
-  tidyverse,
-  dplyr,
-  tidyr,
-  ggplot2,
-  shiny,
-  shinyalert
+    dplyr,
+    DT,
+    ggplot2,
+    lubridate,
+    magrittr,
+    rlang,
+    shiny,
+    tidyr
 Remotes:
   Rapporteket/rapbase
 License: GPL-3
