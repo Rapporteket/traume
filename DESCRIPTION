@@ -1,5 +1,4 @@
-Package: traume
-Type: Package
+Package: test
 Title: Traumeregisteret
 Version: 1.2.0
 Authors@R: c(
@@ -28,8 +27,8 @@ Remotes:
 License: GPL-3
 Encoding: UTF-8
 RoxygenNote: 7.3.2
-URL: http://github.com/Rapporteket/deformitet
-BugReports: http://github.com/Rapporteket/deformitet/issues
+URL: http://github.com/Rapporteket/traume
+BugReports: http://github.com/Rapporteket/traume/issues
 Suggests: 
     testthat
 LazyData: true
