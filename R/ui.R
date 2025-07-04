@@ -49,8 +49,25 @@ app_ui <- function() {
             )
           )
         )
+      ),
+
+      #---- Kvalitetsindikatorer ----
+      shiny::tabPanel(
+        "Kvalitetsindikatorer",
+        shiny::sidebarLayout(
+          sidebarPanel(
+            selectInput("selected_year", "Select Year:", choices = NULL)  # Initialize with NULL
+          ),
+          shiny::mainPanel(
+            tabsetPanel(
+              tabPanel("Tabell", DT::dataTableOutput("Kvalitetsindikatorer_tabell")),
+              tabPanel("Plot", shiny::plotOutput("Kvalitetsindikatorer_plot"))
+            )
+          )
+        )
       )
 
     ) # navbarPage
   ) # tagList
 }
+

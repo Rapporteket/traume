@@ -110,6 +110,38 @@ app_server <- function(input, output, session) {
     DT::datatable(table_registrering(input,total), options = list(pageLength = 16), rownames = FALSE)
   })
 
+  #---- Kvalitetsindikatorer ----
+
+  output$Kvalitetsindikatorer_tabell <- DT::renderDataTable({
+
+    navn <- get_HealthUnitShortName(user$org(), map_db_resh)
+
+    inpercent <- achievements_data(input, total_nasjonalt, navn) %>%
+      dplyr::mutate(`Prosent lokalt` = scales::percent(round(`Prosent lokalt`,3)),
+                    `Prosent nasjonalt` = scales::percent(round(`Prosent nasjonalt`,3)))
+
+    DT::datatable(inpercent,
+                  options = list(pageLength = 12,
+                                 dom = 't',             # 't' stands for table only, removes other controls like search and show
+                                 searching = FALSE,     # Hide the search field
+                                 lengthChange = FALSE,  # Hide the "Show" field for row length
+                                 ordering = FALSE # Hide the ordering option)
+                  ),
+                  rownames = FALSE)
+  })
+
+
+  output$Kvalitetsindikatorer_plot <- renderPlot({
+    navn <- get_HealthUnitShortName(user$org(), map_db_resh)
+    ggplot2::ggplot(achievements_data(input, total_nasjonalt, navn), ggplot2::aes(x = Indikatorer, y = `Prosent lokalt`)) +
+      ggplot2::geom_col(show.legend = FALSE, position = "dodge", fill = "#6baed6") +
+      ggplot2::geom_point(ggplot2::aes(x = Indikatorer, y = `Prosent nasjonalt`), shape = 18, size = 2.5) +
+      ggplot2::scale_y_continuous(labels=scales::percent, breaks = seq(0, 1, 0.20), # x axis with percentage
+                         limits=c(0, 1)) +
+      ggplot2::coord_flip() +
+      ggplot2::theme_minimal()
+  })
+
 
 }
 

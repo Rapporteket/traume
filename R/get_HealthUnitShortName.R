@@ -17,3 +17,4 @@ get_HealthUnitShortName <- function (UnitId, map_data) {
 
   return(navn_reaktivt)
 }
+
