@@ -65,6 +65,30 @@ app_ui <- function() {
             )
           )
         )
+      ),
+      #---- Statistisk prosesskontroll ----
+      shiny::tabPanel(
+        "Statistisk prosesskontroll",
+        shiny::sidebarLayout(
+          sidebarPanel(
+            selectInput("selected_year_spc", "Select year:", choices = NULL), # Initialize with NULL
+            selectInput("spc_options", "Select trend:",
+                        choices = c("Registrert innen 3 mC%neder" = "registrerte",
+                                    "Andel CT"="ct_scans",
+                                    "Andel CT (NISS > 15)"="ct_iss_15",
+                                    "Andel CT (NISS < 4)"="ct_iss_4",
+                                    "Andel intuberte prehospitalt"="intuberte_prehospitalt",
+                                    "Andel intuberte akuttmottak"="intuberte_mottak",
+                                    "Mortalitet"="mortalitet",
+                                    "Andel røntgen bekken"="rontgen_bekken",
+                                    "Andel røntgen bekken (ISS > 15)"="rontgen_bekken_iss15",
+                                    "Andel røntgen thorax"="rontgen_thorax",
+                                    "Andel røntgen thorax (ISS > 15)"="rontgen_thorax_iss15"))
+          ),
+          shiny::mainPanel(
+            shiny::plotOutput("Kvalitetsindikatorer_spc")
+          )
+        )
       )
 
     ) # navbarPage

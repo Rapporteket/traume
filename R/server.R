@@ -143,5 +143,24 @@ app_server <- function(input, output, session) {
   })
 
 
+  #---- Statistisk prosesskontroll ----
+
+  output$Kvalitetsindikatorer_spc <- renderPlot({
+    navn <- get_HealthUnitShortName(user$org(), map_db_resh)
+    data_spc <- spc_data(input, total_nasjonalt, navn)
+    qicharts2::qic(quarter,
+                   get(paste0(input$spc_options, "_teller")),
+                   get(paste0(input$spc_options,"_nevner")),
+                   data = data_spc,
+                   facets = ~ HealthUnitShortName ,
+                   chart = 'p',
+                   title = 'HLR av tilstedev\u00E6rende',
+                   x.period = "quarter",
+                   y.expand = c(0,1),
+                   ylab = "Andel",
+                   xlab = 'År',
+                   scales = "free_y")
+  })
+
 }
 

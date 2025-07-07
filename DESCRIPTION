@@ -20,6 +20,7 @@ Imports:
     ggplot2,
     lubridate,
     magrittr,
+    qicharts2,
     rlang,
     shiny,
     tidyr
