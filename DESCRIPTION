@@ -1,4 +1,4 @@
-Package: test
+Package: traume
 Title: Traumeregisteret
 Version: 1.2.0
 Authors@R: c(
@@ -12,7 +12,7 @@ Authors@R: c(
            email = "ingrid.bondevik@helse-nord.no"))
 Description: Applikasjon for traumeregisteret
 Depends:
-  R (>= 3.5.0)
+  R (>= 4.1.0)
 Imports:
     dplyr,
     DT,
