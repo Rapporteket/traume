@@ -3,18 +3,16 @@
 #'
 #'
 #'
-#' @return
 #' @export
 
-spc_data <- function(input, total_nasjonalt) {
+spc_data <- function(input, total_nasjonalt, lokal_enhet) {
 
 
   oppnaelse_teller_inne_spc <- total_nasjonalt %>%
-    filter(year %in% (as.numeric(input$selected_year_spc)-5):as.numeric(input$selected_year_spc), #input$selected_year,
-           HealthUnitShortName %in% c("Kristiansand", "Nasjonalt")
-    ) %>%
-    group_by(HealthUnitShortName, quarter) %>%
-    summarise(
+    dplyr::filter(year %in% (as.numeric(input$selected_year_spc)-5):as.numeric(input$selected_year_spc), #input$selected_year,
+                  HealthUnitShortName %in% c({{lokal_enhet}}, "Nasjonalt")) %>%
+    dplyr::group_by(HealthUnitShortName, quarter) %>%
+    dplyr::summarise(
       registrerte_teller = sum(difftime(CreationDate, FormDate, units="days") <= 90, na.rm = TRUE),
       ct_scans_teller = sum(ed_tta == 1 & ed_ct == 1, na.rm = TRUE),
       ct_iss_15_teller = sum(ed_tta == 1 & inj_iss > 15 & ed_ct == 1, na.rm = TRUE),
@@ -26,16 +24,14 @@ spc_data <- function(input, total_nasjonalt) {
       rontgen_bekken_iss15_teller = sum(ed_tta == 1 & inj_iss > 15 & xray_pelv == 1, na.rm = TRUE),
       rontgen_thorax_teller = sum(ed_tta == 1 & xray_chst == 1, na.rm = TRUE),
       rontgen_thorax_iss15_teller = sum(ed_tta == 1 & inj_iss > 15 & xray_chst == 1, na.rm = TRUE),
-      .groups = 'drop'
-    )
+      .groups = "drop")
 
   oppnaelse_nevner_inne_spc <- total_nasjonalt %>%
-    filter(year %in% (as.numeric(input$selected_year_spc)-5):as.numeric(input$selected_year_spc),
-           HealthUnitShortName %in% c("Kristiansand", "Nasjonalt")
-    ) %>%
-    group_by(HealthUnitShortName, quarter) %>%
-    summarise(
-      registrerte_nevner = sum(n(),na.rm = TRUE),
+    dplyr::filter(year %in% (as.numeric(input$selected_year_spc)-5):as.numeric(input$selected_year_spc),
+                  HealthUnitShortName %in% c({{lokal_enhet}}, "Nasjonalt")) %>%
+    dplyr::group_by(HealthUnitShortName, quarter) %>%
+    dplyr::summarise(
+      registrerte_nevner = sum(dplyr::n(),na.rm = TRUE),
       ct_scans_nevner = sum(ed_tta == 1 & ed_ct %in% 1:2, na.rm = TRUE),
       ct_iss_15_nevner = sum(ed_tta == 1 & inj_iss > 15 & ed_ct %in% 1:2, na.rm = TRUE),
       ct_iss_4_nevner = sum(ed_tta == 1 & inj_iss < 4 & ed_ct %in% 1:2, na.rm = TRUE),
@@ -46,10 +42,10 @@ spc_data <- function(input, total_nasjonalt) {
       rontgen_bekken_iss15_nevner = sum(ed_tta == 1 & inj_iss > 15 & xray_pelv %in% 1:2, na.rm = TRUE),
       rontgen_thorax_nevner = sum(ed_tta == 1 & xray_chst %in% 1:2, na.rm = TRUE),
       rontgen_thorax_iss15_nevner = sum(ed_tta == 1 & inj_iss > 15 & xray_chst %in% 1:2, na.rm = TRUE),
-      .groups = 'drop'
+      .groups = "drop"
     )
 
-  spc_output <- full_join(oppnaelse_teller_inne_spc, oppnaelse_nevner_inne_spc, by = c("HealthUnitShortName","quarter"))
+  spc_output <- dplyr::full_join(oppnaelse_teller_inne_spc, oppnaelse_nevner_inne_spc, by = c("HealthUnitShortName","quarter"))
 
   return(spc_output)
 }

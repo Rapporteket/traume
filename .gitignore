@@ -8,3 +8,4 @@ inst/shinyApps/app1/*.md
 inst/*.md
 docs/
 *.tar.gz
+ignore

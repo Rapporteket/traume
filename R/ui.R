@@ -1,39 +1,34 @@
-#' Client (ui) for the rapRegTemplate app
+#' Client (ui) for the traume app
 #'
-#' @return An shiny app ui object
+#' @return A shiny app ui object
 #' @export
 
+## LEGG INN EKSPORT I UI-biten
+
 app_ui <- function() {
-
   shiny::addResourcePath("rap", system.file("www", package = "rapbase"))
-  regTitle <- "Traumeregisteret"
 
-  shiny::tagList(
-    shiny::navbarPage(
-      title = shiny::div(
-        shiny::a(shiny::includeHTML(
-          system.file("www/logo.svg", package = "rapbase")
-        )
-        ),
-        regTitle
-      ),
-      windowTitle = regTitle,
-      theme = "rap/bootstrap.css",
+  shiny::tagList( # Needed for "about the user" tags
+    shiny::navbarPage( # type of page
+
+      ###### Graphics ----------------------------------------------------------
+      title = shiny::div(shiny::a(shiny::includeHTML(system.file('www/logo.svg', package = 'rapbase'))), # add the logo
+                         "Rapporteket for traumeregisteret"),
+      windowTitle = "Rapporteket for traumeregisteret",
+      theme = "rap/bootstrap.css", # theme of app
       id = "tabs",
+
       #---- Startside ----
-      shiny::tabPanel(
-        "Startside",
+      shiny::tabPanel( # First tab
+        title = "Startside",
         shiny::mainPanel(
           width = 12,
-          shiny::htmlOutput("Fremside", inline = TRUE),
+          shiny::htmlOutput("fremside", inline = TRUE), # load in the htmloutput wanted. This file is found in folder "inst"
           tabPanel("Tabell",DT::dataTableOutput("Fremside_tabell")),
-          rapbase::appNavbarUserWidget(
-            user = shiny::uiOutput("appUserName"),
-            organization = shiny::uiOutput("appOrgName"),
-            addUserInfo = TRUE
-          )
+          rapbase::navbarWidgetInput("traumeNavbarWidget", selectOrganization = TRUE)
         )
       ),
+
       #---- Registrering ----
       shiny::tabPanel(
         "Registrering",
@@ -43,7 +38,8 @@ app_ui <- function() {
             shiny::selectInput(
               inputId = "time_period",
               label = "Tidsperiode",
-              c("Måned" = "maned", "År" = "ar")
+              choices = c("Måned" = "maned",
+                          "År" = "ar")
             )
           ),
           shiny::mainPanel(
@@ -54,20 +50,21 @@ app_ui <- function() {
           )
         )
       ),
+
       #---- Kvalitetsindikatorer ----
       shiny::tabPanel(
         "Kvalitetsindikatorer",
         shiny::sidebarLayout(
-        sidebarPanel(
-          selectInput("selected_year", "Select Year:", choices = NULL)  # Initialize with NULL
-        ),
-        shiny::mainPanel(
-        tabsetPanel(
-          tabPanel("Tabell", DT::dataTableOutput("Kvalitetsindikatorer_tabell")),
-          tabPanel("Plot", shiny::plotOutput("Kvalitetsindikatorer_plot"))
+          sidebarPanel(
+            selectInput("selected_year", "Select Year:", choices = NULL)  # Initialize with NULL
+          ),
+          shiny::mainPanel(
+            tabsetPanel(
+              tabPanel("Tabell", DT::dataTableOutput("Kvalitetsindikatorer_tabell")),
+              tabPanel("Plot", shiny::plotOutput("Kvalitetsindikatorer_plot"))
+            )
+          )
         )
-        ),
-      )
       ),
       #---- Statistisk prosesskontroll ----
       shiny::tabPanel(
@@ -94,6 +91,7 @@ app_ui <- function() {
         )
       )
 
-    )
-  )
+    ) # navbarPage
+  ) # tagList
 }
+

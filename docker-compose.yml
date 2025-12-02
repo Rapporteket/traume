@@ -1,5 +1,0 @@
-services:
-  app:
-    image: some_image_name
-    ports:
-      - 3838:3838
