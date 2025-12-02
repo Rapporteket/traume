@@ -28,7 +28,7 @@ Remotes:
   Rapporteket/rapbase
 License: GPL-3
 Encoding: UTF-8
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 URL: http://github.com/Rapporteket/traume
 BugReports: http://github.com/Rapporteket/traume/issues
 Suggests: 
