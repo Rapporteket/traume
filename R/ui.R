@@ -6,16 +6,13 @@
 ## LEGG INN EKSPORT I UI-biten
 
 app_ui <- function() {
-  shiny::addResourcePath("rap", system.file("www", package = "rapbase"))
-
   shiny::tagList( # Needed for "about the user" tags
     shiny::navbarPage( # type of page
 
       ###### Graphics ----------------------------------------------------------
-      title = shiny::div(shiny::a(shiny::includeHTML(system.file('www/logo.svg', package = 'rapbase'))), # add the logo
-                         "Rapporteket for traumeregisteret"),
+      title = rapbase::title("Rapporteket for traumeregisteret"),
       windowTitle = "Rapporteket for traumeregisteret",
-      theme = "rap/bootstrap.css", # theme of app
+      theme = rapbase::theme(),
       id = "tabs",
 
       #---- Startside ----
