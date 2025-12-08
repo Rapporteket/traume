@@ -7,30 +7,31 @@
 #' @export
 
 getRegData <- function() {
+  data <- rapbase::loadRegData("traume", query)
 
+  variabler_skade <- c(
+    "HovedskjemaGUID", "inj_iss", "inj_niss"
+  )
 
-  data1 <- read.csv2(".csv")
-  data2 <- read.csv2(".csv")
-  data3 <- read.csv2(".csv")
-  data4 <- read.csv2(".csv")
-  data5 <- read.csv2(".csv")
-  data6 <- read.csv2(".csv")
+  variabler_PROM_6m <- c(
+    "HovedskjemaGUID", "PROM_smerte_6m"
+  )
 
-  data <- dplyr::bind_rows(data1,data2,data3,data4,data5,data6)
+  variabler_PROM_12m <- c(
+    "HovedskjemaGUID", "PROM_smerte_12m"
+  )
 
-  vars_skjema <- readxl::read_xlsx("Felles_variabler_skjema.xlsx")
+  #colnames(prom_6mnd) <- paste(colnames(prom_6mnd),"6m",sep="_")
+  #colnames(prom_12mnd) <- paste(colnames(prom_12mnd),"12m",sep="_")
 
-  skade <- data %>% filter(FormTypeId == 9) %>% distinct(HovedskjemaGUID, .keep_all = TRUE) %>% select(all_of(na.exclude(vars_skjema$skade)))
-  traume <- data %>% filter(FormTypeId == 1) %>% distinct(SkjemaGUID, .keep_all = TRUE) %>% select(!all_of(na.exclude(vars_skjema$skade)) & !all_of(na.exclude(vars_skjema$prom)), HovedskjemaGUID)
-  prom_6mnd <- data %>% filter(FormTypeId == 12) %>% distinct(SkjemaGUID, .keep_all = TRUE) %>% select(all_of(na.exclude(vars_skjema$prom)))
-  prom_12mnd <- data %>% filter(FormTypeId == 14) %>% distinct(SkjemaGUID, .keep_all = TRUE) %>% select(all_of(na.exclude(vars_skjema$prom)))
-
-  colnames(prom_6mnd) <- paste(colnames(prom_6mnd),"6m",sep="_")
-  colnames(prom_12mnd) <- paste(colnames(prom_12mnd),"12m",sep="_")
+  skade <- data %>% filter(FormTypeId == 9) %>% distinct(HovedskjemaGUID, .keep_all = TRUE) %>% select(all_of(variabler_skade))
+  traume <- data %>% filter(FormTypeId == 1) %>% distinct(SkjemaGUID, .keep_all = TRUE) %>% select(!all_of(variabler_skade) & !all_of(variabler_PROM_6m) & !all_of(variabler_PROM_12m), HovedskjemaGUID)
+  prom_6mnd <- data %>% filter(FormTypeId == 12) %>% distinct(SkjemaGUID, .keep_all = TRUE) %>% select(all_of(variabler_PROM_6m))
+  prom_12mnd <- data %>% filter(FormTypeId == 14) %>% distinct(SkjemaGUID, .keep_all = TRUE) %>% select(all_of(variabler_PROM_12m))
 
   total <- dplyr::left_join(traume, skade, by= c("SkjemaGUID" = "HovedskjemaGUID")) %>%
-    dplyr::left_join(prom_6mnd, by= c("SkjemaGUID" = "HovedskjemaGUID_6m")) %>%
-    dplyr::left_join(prom_12mnd, by= c("SkjemaGUID" = "HovedskjemaGUID_12m")) %>%
+    dplyr::left_join(prom_6mnd, by= c("SkjemaGUID" = "HovedskjemaGUID")) %>%
+    dplyr::left_join(prom_12mnd, by= c("SkjemaGUID" = "HovedskjemaGUID")) %>%
     filter(!is.na(HealthUnitShortName),
            HealthUnitShortName != "") %>%
     mutate(year = year(FormDate),

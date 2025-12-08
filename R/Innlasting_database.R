@@ -7,12 +7,12 @@ con <- dbConnect(RMariaDB::MariaDB(),
                  password = "root",
                  dbname = "traume"
                  )
-mydata <- iris
 
+mydata <- read.csv2("traume/datasett.csv")
 
 dbWriteTable(
   con,
-  name = "Test",
+  name = "data",
   value = mydata,
   overwrite = TRUE,
   row.names = FALSE
@@ -24,7 +24,7 @@ query <- "
 SELECT
   *
 FROM
-  Test;
+  data;
 "
 
 data <- rapbase::loadRegData("traume", query)

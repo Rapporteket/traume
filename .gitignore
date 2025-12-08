@@ -1,7 +1,7 @@
 .Rproj.user
 .Rhistory
 .RData
-.csv
+*.csv
 .Ruserdata
 figure
 *.html
@@ -9,4 +9,5 @@ inst/shinyApps/app1/*.md
 inst/*.md
 docs/
 *.tar.gz
+*.xlsx
 ignore

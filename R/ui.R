@@ -70,7 +70,7 @@ app_ui <- function() {
           sidebarPanel(
             selectInput("selected_year_spc", "Select year:", choices = NULL), # Initialize with NULL
             selectInput("spc_options", "Select trend:",
-                        choices = c("Registrert innen 3 mC%neder" = "registrerte",
+                        choices = c("Registrert innen 3 måneder" = "registrerte",
                                     "Andel CT"="ct_scans",
                                     "Andel CT (NISS > 15)"="ct_iss_15",
                                     "Andel CT (NISS < 4)"="ct_iss_4",
