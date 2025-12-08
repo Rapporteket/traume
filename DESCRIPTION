@@ -23,7 +23,9 @@ Imports:
     qicharts2,
     rlang,
     shiny,
-    tidyr
+    tidyr,
+    RMariaDB,
+    DBI
 Remotes:
   Rapporteket/rapbase
 License: GPL-3

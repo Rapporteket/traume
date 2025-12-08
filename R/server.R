@@ -13,7 +13,7 @@ app_server <- function(input, output, session) {
 
   # load in and clean data:
 
-  total <- clean_xlsx_data()
+  total <- getRegData()
 
 
   ######## USER INFO--------------------------------------------------------------
