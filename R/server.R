@@ -25,8 +25,7 @@ app_server <- function(input, output, session) {
   map_db_resh <- total %>%
     dplyr::select(HealthUnitShortName, UnitId) %>% # select required columns
     unique() %>% # keep only unique variables
-    dplyr::mutate(orgname = HealthUnitShortName) %>% # make new column with new name
-    dplyr::select(-c(HealthUnitShortName)) # take out old columns
+    dplyr::rename(orgname = HealthUnitShortName)
 
 
   user <- rapbase::navbarWidgetServer2("traumeNavbarWidget", # denne skal bli navbarWidgetServer når alt er fikset i rapbase

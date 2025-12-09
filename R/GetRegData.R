@@ -7,7 +7,7 @@
 #' @export
 
 getRegData <- function() {
-  data <- rapbase::loadRegData("traume", query)
+  data <- rapbase::loadRegData("traume", "SELECT * FROM data;")
 
   variabler_skade <- c(
     "HovedskjemaGUID", "inj_iss", "inj_niss"
@@ -24,10 +24,10 @@ getRegData <- function() {
   #colnames(prom_6mnd) <- paste(colnames(prom_6mnd),"6m",sep="_")
   #colnames(prom_12mnd) <- paste(colnames(prom_12mnd),"12m",sep="_")
 
-  skade <- data %>% filter(FormTypeId == 9) %>% distinct(HovedskjemaGUID, .keep_all = TRUE) %>% select(all_of(variabler_skade))
-  traume <- data %>% filter(FormTypeId == 1) %>% distinct(SkjemaGUID, .keep_all = TRUE) %>% select(!all_of(variabler_skade) & !all_of(variabler_PROM_6m) & !all_of(variabler_PROM_12m), HovedskjemaGUID)
-  prom_6mnd <- data %>% filter(FormTypeId == 12) %>% distinct(SkjemaGUID, .keep_all = TRUE) %>% select(all_of(variabler_PROM_6m))
-  prom_12mnd <- data %>% filter(FormTypeId == 14) %>% distinct(SkjemaGUID, .keep_all = TRUE) %>% select(all_of(variabler_PROM_12m))
+  skade <- data %>% filter(FormTypeId == 9) %>% dplyr::distinct(HovedskjemaGUID, .keep_all = TRUE) %>% dplyr::select(dplyr::all_of(variabler_skade))
+  traume <- data %>% filter(FormTypeId == 1) %>% dplyr::distinct(SkjemaGUID, .keep_all = TRUE) %>% dplyr::select(!dplyr::all_of(variabler_skade) & !dplyr::all_of(variabler_PROM_6m) & !dplyr::all_of(variabler_PROM_12m), HovedskjemaGUID)
+  prom_6mnd <- data %>% filter(FormTypeId == 12) %>% dplyr::distinct(SkjemaGUID, .keep_all = TRUE) %>% dplyr::select(dplyr::all_of(variabler_PROM_6m))
+  prom_12mnd <- data %>% filter(FormTypeId == 14) %>% dplyr::distinct(SkjemaGUID, .keep_all = TRUE) %>% dplyr::select(dplyr::all_of(variabler_PROM_12m))
 
   total <- dplyr::left_join(traume, skade, by= c("SkjemaGUID" = "HovedskjemaGUID")) %>%
     dplyr::left_join(prom_6mnd, by= c("SkjemaGUID" = "HovedskjemaGUID")) %>%

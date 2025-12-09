@@ -10,4 +10,5 @@ inst/*.md
 docs/
 *.tar.gz
 *.xlsx
+Innlasting.R
 ignore
