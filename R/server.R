@@ -29,9 +29,14 @@ app_server <- function(input, output, session) {
 
 
   user <- rapbase::navbarWidgetServer2("traumeNavbarWidget", # denne skal bli navbarWidgetServer når alt er fikset i rapbase
-                                       "traume",
-                                       caller = "traume",
-                                       map_orgname = shiny::req(map_db_resh))
+                                      "traume",
+                                      map_orgname = shiny::req(map_db_resh))
+
+  # user <- list(
+  #   org = function() {
+  #     return(108354)
+  #   }
+  # )
 
   ### Lage nasjonalt datasett:
 
@@ -52,7 +57,12 @@ app_server <- function(input, output, session) {
   })
 
   years_spc_reactive <- reactive({
-    years_spc <- years_reactive()[1:(length(years_reactive()) - 4)]
+    yrs <- years_reactive()
+    if (length(yrs) > 4) {
+      yrs[1:(length(yrs) - 4)]
+    } else {
+      yrs[0]   # tom vektor
+    }
   })
 
   observe({
