@@ -8,10 +8,10 @@
 spc_data <- function(input, total_nasjonalt, lokal_enhet) {
 
 
-  oppnaelse_teller_inne_spc <- total_nasjonalt %>%
+  oppnaelse_teller_inne_spc <- total_nasjonalt |>
     dplyr::filter(year %in% (as.numeric(input$selected_year_spc)-5):as.numeric(input$selected_year_spc), #input$selected_year,
-                  HealthUnitShortName %in% c({{lokal_enhet}}, "Nasjonalt")) %>%
-    dplyr::group_by(HealthUnitShortName, quarter) %>%
+                  HealthUnitShortName %in% c({{lokal_enhet}}, "Nasjonalt")) |>
+    dplyr::group_by(HealthUnitShortName, quarter) |>
     dplyr::summarise(
       registrerte_teller = sum(difftime(CreationDate, FormDate, units="days") <= 90, na.rm = TRUE),
       ct_scans_teller = sum(ed_tta == 1 & ed_ct == 1, na.rm = TRUE),
@@ -26,10 +26,10 @@ spc_data <- function(input, total_nasjonalt, lokal_enhet) {
       rontgen_thorax_iss15_teller = sum(ed_tta == 1 & inj_iss > 15 & xray_chst == 1, na.rm = TRUE),
       .groups = "drop")
 
-  oppnaelse_nevner_inne_spc <- total_nasjonalt %>%
+  oppnaelse_nevner_inne_spc <- total_nasjonalt |>
     dplyr::filter(year %in% (as.numeric(input$selected_year_spc)-5):as.numeric(input$selected_year_spc),
-                  HealthUnitShortName %in% c({{lokal_enhet}}, "Nasjonalt")) %>%
-    dplyr::group_by(HealthUnitShortName, quarter) %>%
+                  HealthUnitShortName %in% c({{lokal_enhet}}, "Nasjonalt")) |>
+    dplyr::group_by(HealthUnitShortName, quarter) |>
     dplyr::summarise(
       registrerte_nevner = sum(dplyr::n(),na.rm = TRUE),
       ct_scans_nevner = sum(ed_tta == 1 & ed_ct %in% 1:2, na.rm = TRUE),
