@@ -177,5 +177,9 @@ Sys.setenv(SHINYPROXY_USERNAME="sivh")
 Sys.setenv(SHINYPROXY_USERGROUPS="pilot")
 Sys.setenv(R_RAP_INSTANCE="QAC")
 Sys.setenv(R_RAP_CONFIG_PATH="C:/Users/ibo600/repo/config")
+Sys.setenv(R_LIBCURL_SSL_REVOKE_BEST_EFFORT=TRUE)
 
 invisible(Sys.setlocale(category = "LC_ALL", locale = "nb_NO.UTF-8"))
+
+
+
