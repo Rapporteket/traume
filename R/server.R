@@ -32,12 +32,6 @@ app_server <- function(input, output, session) {
                                       "traume",
                                       map_orgname = shiny::req(map_db_resh))
 
-  # user <- list(
-  #   org = function() {
-  #     return(108354)
-  #   }
-  # )
-
   ### Lage nasjonalt datasett:
 
   total_nasjonalt <- total |>
