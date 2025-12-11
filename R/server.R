@@ -13,7 +13,7 @@ app_server <- function(input, output, session) {
 
   # load in and clean data:
 
-  total <- clean_xlsx_data()
+  total <- getRegData()
 
 
   ######## USER INFO--------------------------------------------------------------
@@ -44,7 +44,7 @@ app_server <- function(input, output, session) {
     dplyr::mutate(
       HealthUnitShortName = "Nasjonalt"
     ) |>
-    dplyr::bind_rows(.,total)
+    dplyr::bind_rows(total)
 
   # Hvilke ar er i datasettet
   years_reactive <- reactive({
@@ -163,7 +163,7 @@ app_server <- function(input, output, session) {
                    data = data_spc,
                    facets = ~ HealthUnitShortName ,
                    chart = 'p',
-                   title = '',
+                   title = ' ',
                    x.period = "quarter",
                    y.expand = c(0,1),
                    ylab = "Andel",

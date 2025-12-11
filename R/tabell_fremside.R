@@ -72,7 +72,7 @@ tabell_fremside <- function(total, userUnitId) {
     dplyr::arrange(-year) |>
     dplyr::mutate(month = as.character(year)) |>
     dplyr::select(-year) |>
-    dplyr::bind_rows(antall_month,.) |>
+    dplyr::bind_rows(antall_month) |>
     tidyr::pivot_longer(cols = -month, names_to = "Kategori", values_to = "value") |>
     tidyr::pivot_wider(names_from = month, values_from = value)
 
