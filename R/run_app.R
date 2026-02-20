@@ -7,4 +7,3 @@ run_app <- function() {
   shiny::shinyApp(ui = app_ui, server = app_server)}
 
 # Dette angir funksjon og ikke fil
-

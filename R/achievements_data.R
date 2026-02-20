@@ -8,13 +8,13 @@
 
 achievements_data <- function(input, total_nasjonalt, lokal_enhet) {
 
-  oppnaelse_teller <- total_nasjonalt %>%
+  oppnaelse_teller <- total_nasjonalt |>
     dplyr::filter(HealthUnitShortName %in% c({{lokal_enhet}}, "Nasjonalt"),
                   acc_overflyttet == 2,
                   ed_tta_notrauma == 2,
                   year == input$selected_year
-                  ) %>%
-    dplyr::group_by(HealthUnitShortName) %>%
+                  ) |>
+    dplyr::group_by(HealthUnitShortName) |>
     dplyr::summarise(
       registrerte = sum(difftime(CreationDate, FormDate, units="days") <= 90, na.rm = TRUE),
       ct_scans = sum(ed_tta == 1 & ed_ct == 1, na.rm = TRUE),
@@ -27,7 +27,7 @@ achievements_data <- function(input, total_nasjonalt, lokal_enhet) {
       rontgen_bekken_iss15 = sum(ed_tta == 1 & inj_iss > 15 & xray_pelv == 1, na.rm = TRUE),
       rontgen_thorax = sum(ed_tta == 1 & xray_chst == 1, na.rm = TRUE),
       rontgen_thorax_iss15 = sum(ed_tta == 1 & inj_iss > 15 & xray_chst == 1, na.rm = TRUE),
-      .groups = 'drop') %>%
+      .groups = 'drop') |>
     dplyr::mutate(
       HealthUnitShortName = dplyr::case_when(
         HealthUnitShortName == "Nasjonalt" ~ "sykehus_3",
@@ -35,13 +35,13 @@ achievements_data <- function(input, total_nasjonalt, lokal_enhet) {
       )
     )
 
-  oppnaelse_nevner <- total_nasjonalt %>%
+  oppnaelse_nevner <- total_nasjonalt |>
     dplyr::filter(HealthUnitShortName %in% c({{lokal_enhet}}, "Nasjonalt"),
                   acc_overflyttet == 2,
                   ed_tta_notrauma == 2,
                   year == input$selected_year
-                  ) %>%
-    dplyr::group_by(HealthUnitShortName) %>%
+                  ) |>
+    dplyr::group_by(HealthUnitShortName) |>
     dplyr::summarise(
       registrerte = sum(dplyr::n(),na.rm = TRUE),
       ct_scans = sum(ed_tta == 1 & ed_ct %in% 1:2, na.rm = TRUE),
@@ -54,7 +54,7 @@ achievements_data <- function(input, total_nasjonalt, lokal_enhet) {
       rontgen_bekken_iss15 = sum(ed_tta == 1 & inj_iss > 15 & xray_pelv %in% 1:2, na.rm = TRUE),
       rontgen_thorax = sum(ed_tta == 1 & xray_chst %in% 1:2, na.rm = TRUE),
       rontgen_thorax_iss15 = sum(ed_tta == 1 & inj_iss > 15 & xray_chst %in% 1:2, na.rm = TRUE),
-      .groups = 'drop') %>%
+      .groups = 'drop') |>
     dplyr::mutate(
       HealthUnitShortName = dplyr::case_when(
         HealthUnitShortName == "Nasjonalt" ~ "sykehus_4",
@@ -64,11 +64,11 @@ achievements_data <- function(input, total_nasjonalt, lokal_enhet) {
 
 
   oppnaelse <- dplyr::bind_rows(oppnaelse_teller,
-                                oppnaelse_nevner) %>%
-    tidyr::pivot_longer(-HealthUnitShortName) %>%
+                                oppnaelse_nevner) |>
+    tidyr::pivot_longer(-HealthUnitShortName) |>
     tidyr::pivot_wider(names_from = HealthUnitShortName, values_from = value)
 
-  oppnaelse <- oppnaelse %>%
+  oppnaelse <- oppnaelse |>
     dplyr::mutate(PC_lokalt = sykehus_1 / sykehus_2,
                   PC_Nasjonalt = sykehus_3 / sykehus_4,
                   name = dplyr::case_when(
@@ -83,8 +83,8 @@ achievements_data <- function(input, total_nasjonalt, lokal_enhet) {
              name == "rontgen_bekken_iss15" ~ "Røntgen bekken ved ankomst ISS > 16",
              name == "rontgen_thorax" ~ "Røntgen thorax ved ankomst",
              name == "rontgen_thorax_iss15" ~ "Røntgen thorax ved ankomst ISS > 16",
-           )) %>%
-    dplyr::select(-sykehus_3,-sykehus_4) %>%
+           )) |>
+    dplyr::select(-sykehus_3,-sykehus_4) |>
     dplyr::rename(Indikatorer = name,
                   "Antall oppfyllt" = sykehus_1,
                   "Antall totalt" = sykehus_2,

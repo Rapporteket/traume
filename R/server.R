@@ -13,7 +13,7 @@ app_server <- function(input, output, session) {
 
   # load in and clean data:
 
-  total <- clean_xlsx_data()
+  total <- getRegData()
 
 
   ######## USER INFO--------------------------------------------------------------
@@ -22,38 +22,41 @@ app_server <- function(input, output, session) {
   # Must be organized as df with two columns: UnitId and orgname
   # in order for navbarWidgetServer2 to work properly
 
-  map_db_resh <- total %>%
-    dplyr::select(HealthUnitShortName, UnitId) %>% # select required columns
-    unique() %>% # keep only unique variables
-    dplyr::mutate(orgname = HealthUnitShortName) %>% # make new column with new name
-    dplyr::select(-c(HealthUnitShortName)) # take out old columns
+  map_db_resh <- total |>
+    dplyr::select(HealthUnitShortName, UnitId) |> # select required columns
+    unique() |> # keep only unique variables
+    dplyr::rename(orgname = HealthUnitShortName)
 
 
   user <- rapbase::navbarWidgetServer2("traumeNavbarWidget", # denne skal bli navbarWidgetServer når alt er fikset i rapbase
-                                       "traume",
-                                       caller = "traume",
-                                       map_orgname = shiny::req(map_db_resh))
+                                      "traume",
+                                      map_orgname = shiny::req(map_db_resh))
 
   ### Lage nasjonalt datasett:
 
-  total_nasjonalt <- total %>%
+  total_nasjonalt <- total |>
     dplyr::mutate(
       HealthUnitShortName = "Nasjonalt"
-    ) %>%
-    dplyr::bind_rows(.,total)
+    ) |>
+    dplyr::bind_rows(total)
 
   # Hvilke ar er i datasettet
   years_reactive <- reactive({
-    years <- total %>%
-      dplyr::filter(UnitId == user$org()) %>%
-      dplyr::mutate(year = lubridate::year(FormDate)) %>%  # Extract year from date
-      dplyr::pull(year) %>%
-      unique() %>%
+    years <- total |>
+      dplyr::filter(UnitId == user$org()) |>
+      dplyr::mutate(year = lubridate::year(FormDate)) |>  # Extract year from date
+      dplyr::pull(year) |>
+      unique() |>
       sort(decreasing = TRUE)
   })
 
   years_spc_reactive <- reactive({
-    years_spc <- years_reactive()[1:(length(years_reactive()) - 4)]
+    yrs <- years_reactive()
+    if (length(yrs) > 4) {
+      yrs[1:(length(yrs) - 4)]
+    } else {
+      yrs[0]   # tom vektor
+    }
   })
 
   observe({
@@ -116,7 +119,7 @@ app_server <- function(input, output, session) {
 
     navn <- get_HealthUnitShortName(user$org(), map_db_resh)
 
-    inpercent <- achievements_data(input, total_nasjonalt, navn) %>%
+    inpercent <- achievements_data(input, total_nasjonalt, navn) |>
       dplyr::mutate(`Prosent lokalt` = scales::percent(round(`Prosent lokalt`,3)),
                     `Prosent nasjonalt` = scales::percent(round(`Prosent nasjonalt`,3)))
 
@@ -154,7 +157,7 @@ app_server <- function(input, output, session) {
                    data = data_spc,
                    facets = ~ HealthUnitShortName ,
                    chart = 'p',
-                   title = 'HLR av tilstedev\u00E6rende',
+                   title = ' ',
                    x.period = "quarter",
                    y.expand = c(0,1),
                    ylab = "Andel",

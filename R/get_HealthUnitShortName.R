@@ -11,8 +11,8 @@
 #' @export
 
 get_HealthUnitShortName <- function (UnitId, map_data) {
-  navn_reaktivt <- map_data %>%
-    dplyr::filter(UnitId == {{UnitId}}) %>%
+  navn_reaktivt <- map_data |>
+    dplyr::filter(UnitId == {{UnitId}}) |>
     dplyr::select(orgname)
 
   return(navn_reaktivt)
