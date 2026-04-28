@@ -21,6 +21,7 @@ Imports:
     lubridate,
     magrittr,
     qicharts2,
+    rapbase (>= 3.6.0),
     rlang,
     shiny,
     tidyr,
