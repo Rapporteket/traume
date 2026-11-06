@@ -10,9 +10,9 @@ app_ui <- function() {
     shiny::navbarPage( # type of page
 
       ###### Graphics ----------------------------------------------------------
-      title = rapbase::title("Rapporteket for traumeregisteret"),
+      title = rapbase::regTitle("Rapporteket for traumeregisteret"),
       windowTitle = "Rapporteket for traumeregisteret",
-      theme = rapbase::theme(),
+      theme = rapbase::rapTheme(),
       id = "tabs",
 
       #---- Startside ----
